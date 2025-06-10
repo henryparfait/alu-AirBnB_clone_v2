@@ -6,61 +6,40 @@ import sys
 
 
 class HBNBCommand(cmd.Cmd):
-    """AirBnB command interpreter class.
-
-    This class handles both interactive and non-interactive modes
-    of the AirBnB clone command interpreter.
-    """
+    """AirBnB command interpreter class."""
 
     prompt = '(hbnb) ' if sys.stdin.isatty() else ''
 
     def emptyline(self):
-        """Do nothing when receiving empty line."""
+        """Do nothing on empty input line."""
         pass
 
     def do_quit(self, arg):
-        """Quit command to exit the program.
-        
-        Usage: quit
+        """Exit the program.
+                Usage: quit
         """
         return True
 
     def do_EOF(self, arg):
-        """EOF signal to exit the program.
-        
-        Usage: Ctrl+D (Unix) or Ctrl+Z (Windows)
+        """Exit the program on EOF (Ctrl+D).
+                Usage: Ctrl+D
         """
         print()
         return True
 
     def do_help(self, arg):
         """Show help documentation.
-        
-        Usage: help [command]
+            Usage: help [command]
         """
-        super().do_help(arg)
-
-    def default(self, line):
-        """Handle unknown commands.
-        
-        Args:
-            line: The input command line
-        """
-        print(f"*** Unknown syntax: {line}")
-
-    def postcmd(self, stop, line):
-        """Execute after command processing.
-        
-        Args:
-            stop: Flag indicating if command loop should stop
-            line: The input command line
-        Returns:
-            bool: Whether to stop the command loop
-        """
-        if not sys.stdin.isatty():
-            print(self.prompt, end='')
-        return stop
-
-
+        if not arg:
+            # Show all commands when no argument is given
+            print("Documented commands (type help <topic>):")
+            print("=" * 40)  # Consistent separator line
+            commands = [name[3:] for name in self.get_names() 
+                       if name.startswith('do_')]
+            print("\n".join(sorted(commands)))
+        else:
+             # Show specific command help
+            super().do_help(arg)
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
